@@ -22,3 +22,9 @@ eclipse
 run
 
 SBM-InfiniteFalling\.txt
+
+output/
+
+CompiledWith\.txt
+
+changelog\.html
