@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber(modid = InfiniteFallBoots.MODID)
 public class InfiniteFallBoots {
 	public static final String MODID = "infinitefallboots";
-	public static final String NAME = "Infinite Fall Boots";
+	public static final String NAME = "[SBM] Infinite Fall";
 	public static final String VERSION = "1.0.0";
 
 	public static Logger logger;
@@ -44,17 +44,17 @@ public class InfiniteFallBoots {
 	public static void registerEnchants(Register<Enchantment> event) {
 		event.getRegistry().register(INFINITE_FALLING);
 	}
-	
+
 	@SubscribeEvent
 	public static void onLanding(LivingFallEvent event) {
 		EntityLivingBase elb = event.getEntityLiving();
 		int level = EnchantmentHelper.getMaxEnchantmentLevel(INFINITE_FALLING, elb);
 		if(level > 0) {
 			if(event.getDistance() >= FallConfig.minTriggerHeight) {
-				
+
 				boolean notObstructed = true;
 				double impactPosition = 0;
-				
+
 				for(int i = (int) elb.posY + 2; i < elb.world.provider.getHeight(); i++) {
 					BlockPos pos = new BlockPos(elb.posX, i, elb.posZ);
 					IBlockState state = elb.world.getBlockState(pos);
@@ -64,8 +64,8 @@ public class InfiniteFallBoots {
 						break;
 					}
 				}
-				
-				
+
+
 				if(notObstructed) {
 					elb.setPosition(elb.posX, elb.world.provider.getHeight() + FallConfig.heightToAdd, elb.posZ);
 					event.setDamageMultiplier(0);
@@ -77,7 +77,7 @@ public class InfiniteFallBoots {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent event) {
         if(event.getModID().equals(InfiniteFallBoots.MODID)) {
