@@ -1,5 +1,8 @@
 package com.builtbroken.infinitefallboots;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.block.BlockState;
@@ -15,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -41,11 +45,19 @@ public class InfiniteFallBoots {
     public static class FallHandler {
 
         @SubscribeEvent
-        public static void onLanding(LivingFallEvent event) {
-            LivingEntity elb = event.getEntityLiving();
+        public static void onLandingLiving(LivingFallEvent event) {
+            onLanding(event.getEntityLiving(), event::setDamageMultiplier, event::getDistance);
+        }
+        
+        @SubscribeEvent
+        public static void onLandingCreativePlayer(PlayerFlyableFallEvent event) {
+            onLanding(event.getEntityLiving(), i -> {}, event::getDistance);
+        }
+        
+        public static void onLanding(LivingEntity elb, Consumer<Integer> damageSetter, Supplier<Float> distanceGetter) {
             int level = EnchantmentHelper.getMaxEnchantmentLevel(INFINITE_FALLING, elb);
             if(level > 0) {
-                if(event.getDistance() >= FallConfig.FALL_CONFIG.minTriggerHeight.get()) {
+                if(distanceGetter.get() >= FallConfig.FALL_CONFIG.minTriggerHeight.get()) {
 
                     boolean notObstructed = true;
                     double impactPosition = 0;
@@ -63,11 +75,11 @@ public class InfiniteFallBoots {
 
                     if(notObstructed) {
                         elb.setPosition(elb.posX, elb.world.getHeight() + FallConfig.FALL_CONFIG.heightToAdd.get(), elb.posZ);
-                        event.setDamageMultiplier(0);
+                        damageSetter.accept(0);
                     } else {
                         elb.addVelocity(0, (impactPosition - elb.posY) / 2, 0);
                         elb.attackEntityFrom(DamageSource.GENERIC, FallConfig.FALL_CONFIG.damageOnImpact.get().floatValue());
-                        event.setDamageMultiplier(0);
+                        damageSetter.accept(0);
                     }
                 }
             }

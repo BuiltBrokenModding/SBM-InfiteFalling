@@ -5,8 +5,8 @@ displayURL="https://minecraft.curseforge.com/projects/sbm-infinite-falling"
 credits="BuiltBrokenModding/DarkGuardsman for commission, its_meow for programming and updating"
 authors="its_meow"
 [[mods]]
-	modId="infinitefallboots"
-	version="1.14.2-1.0.0"
-	displayName="[SBM] Infinite Falling"
-	description='''
-	Adds an enchantment that teleports you to the top of the world upon hitting the ground from a jump.'''
+modId="infinitefallboots"
+version="1.14.2-1.0.0"
+displayName="[SBM] Infinite Falling"
+description='''
+Adds an enchantment that teleports you to the top of the world upon hitting the ground from a jump.'''
